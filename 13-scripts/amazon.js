@@ -63,50 +63,45 @@ document.querySelector('.js-products-grid').innerHTML = productsHTML;
 //let timerId;
 const itemMessageTimeouts = [];
 
-document.querySelectorAll('.js-add-to-cart')
-  .forEach((button) => {
-    button.addEventListener('click', () => {
-      const {productId} = button.dataset;
-      
-      let matchingItem;
+function addToCart(productId) {
+  let matchingItem;
 
-      cart.forEach((item) => {
-        if (productId === item.productId) {
-          matchingItem = item;
-        }
-      });
-
-      const quantitySelector = document.querySelector(`.is-quantity-selector-${productId}`);
-
-      const quantity = Number(quantitySelector.value);
-
-      
-      if (matchingItem) {
-        matchingItem.quantity += quantity;
-      } else {
-          cart.push({
-            productId ,
-            quantity
-          });
+    cart.forEach((cartItem) => {
+      if (productId === cartItem.productId) {
+        matchingItem = cartItem;
       }
-      
-      let cartQuantity = 0
+    });
 
-      cart.forEach((item) => {
-        cartQuantity += item.quantity;
-      })
+    const quantitySelector = document.querySelector(`.is-quantity-selector-${productId}`);
 
-      document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+    const quantity = Number(quantitySelector.value);
 
-      const itemAdded = document.querySelector(`.js-added-to-cart-${productId}`)
+    
+    if (matchingItem) {
+      matchingItem.quantity += quantity;
+    } else {
+      cart.push({
+        productId ,
+        quantity
+      });
+    }
+}
+
+function updateCartQuantity(){
+  let cartQuantity = 0;
+
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  })
+
+  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+}
+
+function itemAddedToCartMessage(productId) {
+  const itemAdded = document.querySelector(`.js-added-to-cart-${productId}`)
     
       itemAdded.classList.add('added-to-cart-visible');
 
-      /* 
-      if (timerId) {
-        clearTimeout(timerId)
-      }
-      */
       const previousTimeoutId = itemMessageTimeouts[productId];
 
       if (previousTimeoutId) {
@@ -118,6 +113,15 @@ document.querySelectorAll('.js-add-to-cart')
       },2000);
 
       itemMessageTimeouts[productId] = timeoutId;
+}
+
+document.querySelectorAll('.js-add-to-cart')
+  .forEach((button) => {
+    button.addEventListener('click', () => {
+      const {productId} = button.dataset;
+      addToCart(productId);
+      updateCartQuantity();
+      itemAddedToCartMessage(productId);
     });
   });
 
