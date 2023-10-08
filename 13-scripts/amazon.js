@@ -1,4 +1,4 @@
-import {cart} from '../13-javascript-amazon-project-main copy/data/cart.js';
+import {cart, addToCart} from '../13-javascript-amazon-project-main copy/data/cart.js';
 
 import {products} from '../13-javascript-amazon-project-main copy/data/products.js'
 
@@ -63,30 +63,6 @@ document.querySelector('.js-products-grid').innerHTML = productsHTML;
 //let timerId;
 const itemMessageTimeouts = [];
 
-function addToCart(productId) {
-  let matchingItem;
-
-    cart.forEach((cartItem) => {
-      if (productId === cartItem.productId) {
-        matchingItem = cartItem;
-      }
-    });
-
-    const quantitySelector = document.querySelector(`.is-quantity-selector-${productId}`);
-
-    const quantity = Number(quantitySelector.value);
-
-    
-    if (matchingItem) {
-      matchingItem.quantity += quantity;
-    } else {
-      cart.push({
-        productId ,
-        quantity
-      });
-    }
-}
-
 function updateCartQuantity(){
   let cartQuantity = 0;
 
@@ -100,19 +76,19 @@ function updateCartQuantity(){
 function itemAddedToCartMessage(productId) {
   const itemAdded = document.querySelector(`.js-added-to-cart-${productId}`)
     
-      itemAdded.classList.add('added-to-cart-visible');
+  itemAdded.classList.add('added-to-cart-visible');
 
-      const previousTimeoutId = itemMessageTimeouts[productId];
+  const previousTimeoutId = itemMessageTimeouts[productId];
 
-      if (previousTimeoutId) {
-        clearTimeout(previousTimeoutId);
-      };
-      
-      const timeoutId =setTimeout(() => {
-        itemAdded.classList.remove('added-to-cart-visible');
-      },2000);
+  if (previousTimeoutId) {
+    clearTimeout(previousTimeoutId);
+  };
+  
+  const timeoutId =setTimeout(() => {
+    itemAdded.classList.remove('added-to-cart-visible');
+  },2000);
 
-      itemMessageTimeouts[productId] = timeoutId;
+  itemMessageTimeouts[productId] = timeoutId;
 }
 
 document.querySelectorAll('.js-add-to-cart')
