@@ -1,4 +1,4 @@
-import {cart, addToCart} from '../13-javascript-amazon-project-main copy/data/cart.js';
+import {cart, addToCart, calculateCartQuantity} from '../13-javascript-amazon-project-main copy/data/cart.js';
 
 import {products} from '../13-javascript-amazon-project-main copy/data/products.js';
 
@@ -66,12 +66,8 @@ document.querySelector('.js-products-grid').innerHTML = productsHTML;
 const itemMessageTimeouts = [];
 
 function updateCartQuantity(){
-  let cartQuantity = 0;
+  const cartQuantity = calculateCartQuantity();
   
-  cart.forEach((cartItem) => {
-    cartQuantity += cartItem.quantity;
-  })
-
   document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
 }
 updateCartQuantity();

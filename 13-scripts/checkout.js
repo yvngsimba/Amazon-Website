@@ -1,4 +1,4 @@
-import {cart, removeFromCart} from '../13-javascript-amazon-project-main copy/data/cart.js';
+import {cart, removeFromCart, calculateCartQuantity} from '../13-javascript-amazon-project-main copy/data/cart.js';
 
 import {products} from '../13-javascript-amazon-project-main copy/data/products.js';
 
@@ -40,9 +40,11 @@ cart.forEach((cartItem) => {
             <span>
               Quantity: <span class="quantity-label">${cartItem.quantity}</span>
             </span>
-            <span class="update-quantity-link link-primary">
+            <span class="update-quantity-link link-primary js-update-quantity-link data-product-id="${matchingProduct.id}">
               Update
             </span>
+            <input class="quantity-input"> 
+            <span class="save-quantity-link">Save</span>
             <span class="delete-quantity-link link-primary js-delete" data-product-id="${matchingProduct.id}">
               Delete
             </span>
@@ -116,13 +118,16 @@ document.querySelectorAll('.js-delete')
 });
 
 function updateCartQuantity(){
-  let cartQuantity = 0;
+  const cartQuantity = calculateCartQuantity();
   
-  cart.forEach((cartItem) => {
-    cartQuantity += cartItem.quantity;
-  });
-  
-  document.querySelector('.js-quantity-checkout').innerHTML = `${cartQuantity}`;
+  document.querySelector('.js-quantity-checkout').innerHTML = `${cartQuantity} items`;
 }
-
 updateCartQuantity();
+
+document.querySelectorAll('.js-update-quantity-link')
+  .forEach((updateLink) => {
+    updateLink.addEventListener('click', () => {
+      const productId = updateLink.dataset.productId;
+      console.log(productId);
+    });
+});
