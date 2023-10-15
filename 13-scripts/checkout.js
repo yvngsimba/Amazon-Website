@@ -1,4 +1,4 @@
-import {cart, removeFromCart, calculateCartQuantity} from '../13-javascript-amazon-project-main copy/data/cart.js';
+import {cart, removeFromCart, calculateCartQuantity, updateQuantity} from '../13-javascript-amazon-project-main copy/data/cart.js';
 
 import {products} from '../13-javascript-amazon-project-main copy/data/products.js';
 
@@ -40,11 +40,11 @@ cart.forEach((cartItem) => {
             <span>
               Quantity: <span class="quantity-label">${cartItem.quantity}</span>
             </span>
-            <span class="update-quantity-link link-primary js-update-quantity-link data-product-id="${matchingProduct.id}">
+            <span class="update-quantity-link link-primary js-update-quantity-link" data-product-id="${matchingProduct.id}">
               Update
             </span>
-            <input class="quantity-input"> 
-            <span class="save-quantity-link">Save</span>
+            <input class="quantity-input js-quantity-input-${matchingProduct.id}"> 
+            <span class="save-quantity-link link-primary" data-product-id="${matchingProduct.id}">Save</span>
             <span class="delete-quantity-link link-primary js-delete" data-product-id="${matchingProduct.id}">
               Delete
             </span>
@@ -124,10 +124,30 @@ function updateCartQuantity(){
 }
 updateCartQuantity();
 
-document.querySelectorAll('.js-update-quantity-link')
-  .forEach((updateLink) => {
-    updateLink.addEventListener('click', () => {
-      const productId = updateLink.dataset.productId;
-      console.log(productId);
+const jsUpdateLink = document.querySelectorAll('.js-update-quantity-link');
+
+jsUpdateLink.forEach((updateLink) => {
+  updateLink.addEventListener('click', () => {
+    const productId = updateLink.dataset.productId;
+    
+    const container = document.querySelector(`.js-cart-item-container-${productId}`);
+    container.classList.add('is-editing-quantity');
+  });
+}); 
+
+document.querySelectorAll('.save-quantity-link')
+  .forEach((saveLink) => {
+    saveLink.addEventListener('click', () => {
+      const productId = saveLink.dataset.productId;
+      
+      const container = document.querySelector(
+        `.js-cart-item-container-${productId}`
+      );
+      container.classList.remove('is-editing-quantity');
+
+      const inputValue = document.querySelector(`.js-quantity-input-${productId}`);
+      
+      const newQuantity = Number(inputValue.value);
+      updateQuantity(productId, newQuantity);
     });
 });
