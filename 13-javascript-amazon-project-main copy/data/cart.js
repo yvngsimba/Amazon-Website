@@ -73,6 +73,11 @@ export function updateQuantity(productId, newQuantity){
 
     matchingItem.quantity = newQuantity;
 
-    saveToStorage()
+    if (newQuantity >= 0 && newQuantity < 1000) {
+      saveToStorage()
+    } else {
+        return 0
+    }
+    
   });
 }
