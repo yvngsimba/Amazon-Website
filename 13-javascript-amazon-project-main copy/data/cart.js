@@ -76,6 +76,7 @@ export function updateQuantity(productId, newQuantity){
     if (newQuantity >= 0 && newQuantity < 1000) {
       saveToStorage()
     } else {
+        alert('Quantity must be at least 0 and less than 1000');
         return 0
     }
     

@@ -135,10 +135,31 @@ jsUpdateLink.forEach((updateLink) => {
   });
 }); 
 
+
 document.querySelectorAll('.save-quantity-link')
   .forEach((saveLink) => {
     saveLink.addEventListener('click', () => {
       const productId = saveLink.dataset.productId;
+
+      const inputValue = document.querySelector(`.js-quantity-input-${productId}`);
+      
+      const newQuantity = Number(inputValue.value);
+      updateQuantity(productId, newQuantity);
+
+      const container = document.querySelector(
+        `.js-cart-item-container-${productId}`
+      );
+      container.classList.remove('is-editing-quantity');
+
+      const quantityLabel = document.querySelector(`.js-quantity-label-${productId}`);
+      updateCartQuantity();
+    });
+});
+
+document.querySelectorAll('.quantity-input').forEach((inputValue) => {
+  inputValue.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter')  {
+      const productId = inputValue.dataset.productId;
       
       const container = document.querySelector(
         `.js-cart-item-container-${productId}`
@@ -151,15 +172,8 @@ document.querySelectorAll('.save-quantity-link')
       updateQuantity(productId, newQuantity);
 
       const quantityLabel = document.querySelector(`.js-quantity-label-${productId}`);
-
-      if (newQuantity >= 0 && newQuantity < 1000) {
-        quantityLabel.innerHtml = newQuantity;
-      } else{
-          alert('Invalid Quantity, try again');
-          newQuantity = 0
-          quantityLabel.innerHtml = newQuantity;
-      }
-      
       updateCartQuantity();
-    });
-});
+    }
+  })
+})
+  
