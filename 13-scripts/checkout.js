@@ -1,8 +1,16 @@
 import {cart, removeFromCart, calculateCartQuantity, updateQuantity} from '../13-javascript-amazon-project-main copy/data/cart.js';
-
 import {products} from '../13-javascript-amazon-project-main copy/data/products.js';
-
 import {formatCurrency} from './utils/money.js';
+import {hello} from 'https://unpkg.com/supersimpledev@1.0.1/hello.esm.js';
+import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
+
+hello();
+
+const today = dayjs();
+
+const deliveryDate = today.add(7,'days');
+
+console.log(deliveryDate.format('dddd, MMMM D'));
 
 let cartSummaryHTML = '';
 
@@ -156,6 +164,7 @@ document.querySelectorAll('.save-quantity-link')
     });
 });
 
+/*
 document.querySelectorAll('.quantity-input').forEach((inputValue) => {
   inputValue.addEventListener('keydown', (event) => {
     if (event.key === 'Enter')  {
@@ -176,4 +185,4 @@ document.querySelectorAll('.quantity-input').forEach((inputValue) => {
     }
   })
 })
-  
+  */
