@@ -20,6 +20,8 @@ export function addToCart(productId) {
   let matchingItem;
 
     cart.forEach((cartItem) => {
+      const productId = cartItem.productId
+
       if (productId === cartItem.productId) {
         matchingItem = cartItem;
       }
@@ -35,8 +37,7 @@ export function addToCart(productId) {
     } else {
       cart.push({
         productId: productId,
-        quantity: 1,
-        deliveryOptionId: '1'
+        quantity: 1
       });
     }
 
