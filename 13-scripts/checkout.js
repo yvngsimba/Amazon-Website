@@ -1,4 +1,4 @@
-import {cart, removeFromCart, calculateCartQuantity, updateQuantity} from '../13-javascript-amazon-project-main copy/data/cart.js';
+import {cart, removeFromCart, calculateCartQuantity, updateQuantity, updateDeliveryOption} from '../13-javascript-amazon-project-main copy/data/cart.js';
 import {products} from '../13-javascript-amazon-project-main copy/data/products.js';
 import {formatCurrency} from './utils/money.js';
 import {hello} from 'https://unpkg.com/supersimpledev@1.0.1/hello.esm.js';
@@ -113,7 +113,9 @@ function deliveryOptionsHTML(matchingProduct, cartItem) {
       
       
       html += `
-      <div class="delivery-option">
+      <div class="delivery-option js-delivery-option"
+        data-product-id="${matchingProduct.id}"
+        data-delivery-option-id="${deliveryOption.id}">
         <input type="radio"
         ${isChecked ? 'checked' : ''}
           class="delivery-option-input"
@@ -192,25 +194,10 @@ document.querySelectorAll('.save-quantity-link')
     });
 });
 
-/*
-document.querySelectorAll('.quantity-input').forEach((inputValue) => {
-  inputValue.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter')  {
-      const productId = inputValue.dataset.productId;
-      
-      const container = document.querySelector(
-        `.js-cart-item-container-${productId}`
-      );
-      container.classList.remove('is-editing-quantity');
-
-      const inputValue = document.querySelector(`.js-quantity-input-${productId}`);
-      
-      const newQuantity = Number(inputValue.value);
-      updateQuantity(productId, newQuantity);
-
-      const quantityLabel = document.querySelector(`.js-quantity-label-${productId}`);
-      updateCartQuantity();
-    }
-  })
-})
-  */
+document.querySelectorAll('.js-delivery-option')
+  .forEach((element) => {
+    element.addEventListener('click', () => {
+      const {productId, deliveryOptionId} = element.dataset;
+      updateDeliveryOption(productId, deliveryOptionId);
+    });
+  });
