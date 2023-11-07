@@ -2,8 +2,10 @@ import {cart, removeFromCart, calculateCartQuantity, updateQuantity, updateDeliv
 import {products, getProduct} from '../../13-javascript-amazon-project-main copy/data/products.js';
 import {formatCurrency} from '../utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-import {deliveryOptions, getDelivery} from'../../13-javascript-amazon-project-main copy/data/deliveryOptions.js';
+import {deliveryOptions, getDelivery, calculateDeliveryDate} from'../../13-javascript-amazon-project-main copy/data/deliveryOptions.js';
 import {renderPaymentSummary} from './paymentSummary.js';
+import {renderCheckoutHeader} from './checkoutHeader.js';
+
 
 export function renderOrderSummary() {
   let cartSummaryHTML = '';
@@ -17,15 +19,8 @@ export function renderOrderSummary() {
 
     const deliveryOption = getDelivery(deliveryOptionId)
 
-    const today = dayjs();
-    const deliveryDate = today.add(
-      deliveryOption.deliveryDays,
-      'days'
-    );
-    const  dateString = deliveryDate.format(
-      'dddd, MMMM D'
-    );
-
+    const dateString = calculateDeliveryDate(deliveryOption)
+    
     cartSummaryHTML += 
       `
         <div class="cart-item-container 
@@ -76,14 +71,8 @@ export function renderOrderSummary() {
 
 
     deliveryOptions.forEach((deliveryOption) => {
-      const today = dayjs();
-      const deliveryDate = today.add(
-        deliveryOption.deliveryDays,
-        'days'
-      );
-      const  dateString = deliveryDate.format(
-        'dddd, MMMM D'
-      );
+      
+      const dateString = calculateDeliveryDate(deliveryOption)
 
       const priceString = deliveryOption.deliveryPrice === 0
         ? 'FREE' 
@@ -125,7 +114,8 @@ export function renderOrderSummary() {
     link.addEventListener('click',() => {
       const productId = link.dataset.productId;
       removeFromCart(productId);
-
+      renderCheckoutHeader();
+      renderOrderSummary();
       renderPaymentSummary();
     });
   });
@@ -152,20 +142,21 @@ export function renderOrderSummary() {
       saveLink.addEventListener('click', () => {
         const productId = saveLink.dataset.productId;
 
-        const inputValue = document.querySelector(`.js-quantity-input-${productId}`);
-        
-        const newQuantity = Number(inputValue.value);
-        updateQuantity(productId, newQuantity);
-
         const container = document.querySelector(
           `.js-cart-item-container-${productId}`
         );
         container.classList.remove('is-editing-quantity');
 
-        const quantityLabel = document.querySelector(`.js-quantity-label-${productId}`);
-        updateCartQuantity();
+        const inputValue = document.querySelector(
+          `.js-quantity-input-${productId}`
+        );
+        const newQuantity = Number(inputValue.value);
+        updateQuantity(productId, newQuantity);
+
+        renderCheckoutHeader();
         renderOrderSummary();
         renderPaymentSummary();
+
       });
   });
 
